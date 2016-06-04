@@ -54,7 +54,7 @@ fitSUM = function(start) {
 
 fVUM = function(par) VUMf(get('s',.GlobalEnv),get('d',.GlobalEnv),par[1],par[2])
 fitVUM = function(start){
-  a = nlminb(start,fVUM,scale=1,lower=c(.0001,.01),upper=c(10000,1000),control=list(maxit=10000000));
+  a = nlminb(start,fVUM,scale=1,lower=c(.0001,.01),upper=c(2,1000),control=list(maxit=10000000));
   b = a$message;
   res = c(a$objective,as.numeric(substr(b,nchar(b)-1,nchar(b)-1)))
   return(res)
