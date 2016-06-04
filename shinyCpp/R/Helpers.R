@@ -79,16 +79,14 @@ complex = c(1,1,1)
 
 run = function(type,no,n,sd,np){
   
-  a1  = 0
-  
   pr  <<- problemGenerator(np,no)
   s   <<- sampl(pr,n)
   
   if(type == 'SUM vs. VUM'){
     phi <<- ifelse(runif(1,0,1) > .5,exp(runif(1,log(1),log(10000))),rbeta(1,3,1))
     d   <<- SUMpr(s,sd)
-    a1 = fitSUM(sd*10)
-    b1 = fitVUM(c(1,sd*10))
+    a1 <<- fitSUM(sd*10)
+    b1 <<- fitVUM(c(1,sd*10))
     d  <<- VUMpr(s,phi,sd)
     a2 <<- fitVUM(c(phi,sd*10))
     b2 <<- fitSUM(sd*10)
@@ -96,8 +94,8 @@ run = function(type,no,n,sd,np){
   if(type == 'SUM vs. SWIM'){
     zt <<- sample(1:n,1)
     d  <<- SUMpr(s,sd)
-    a1 = fitSUM(sd*10)
-    b1 = fitSWIM(sd*10)
+    a1 <<- fitSUM(sd*10)
+    b1 <<- fitSWIM(sd*10)
     d  <<- SWIMpr(s,zt,sd)
     a2 <<- fitSWIM(sd*10)
     b2 <<- fitSUM(sd*10)
@@ -106,13 +104,13 @@ run = function(type,no,n,sd,np){
     phi <<- ifelse(runif(1,0,1) > .5,exp(runif(1,log(1),log(10000))),rbeta(1,3,1))
     zt <<- sample(1:n,1)
     d  <<- VUMpr(s,phi,sd)
-    a1 = fitVUM(c(phi,sd*10))
-    b1 = fitSWIM(sd*10)
+    a1 <<- fitVUM(c(phi,sd*10))
+    b1 <<- fitSWIM(sd*10)
     d  <<- SWIMpr(s,zt,sd)
     a2 <<- fitSWIM(sd*10)
     b2 <<- fitVUM(c(.5,sd*10))
     }
-  return(c(get('a1',.GlobalEnv),get('b1',GlobalEnv),get('a2',.GlobalEnv),get('b2',.GlobalEnv)))
+  return(c(get('a1',.GlobalEnv),get('b1',.GlobalEnv),get('a2',.GlobalEnv),get('b2',.GlobalEnv)))
 }
 
 
@@ -128,33 +126,33 @@ runm = function(nm,type,no,n,sd,np){
   if(type == 'SUM vs. VUM'){
     phi <<- ifelse(runif(1,0,1) > .5,exp(runif(1,log(1),log(10000))),rbeta(1,3,1))
     d   <<- SUMpr(s,sd)
-    a1 = fitSUM(sd*10)
-    b1 = fitVUM(c(1,sd*10))
+    a1 <<- fitSUM(sd*10)
+    b1 <<- fitVUM(c(1,sd*10))
     d  <<- VUMpr(s,phi,sd)
-    a2 = fitVUM(c(phi,sd*10))
-    b2 = fitSUM(sd*10)
+    a2 <<- fitVUM(c(phi,sd*10))
+    b2 <<- fitSUM(sd*10)
   }
   if(type == 'SUM vs. SWIM'){
     zt <<- sample(1:n,1)
     d  <<- SUMpr(s,sd)
-    a1 = fitSUM(sd*10)
-    b1 = fitSWIM(sd*10)
+    a1 <<- fitSUM(sd*10)
+    b1 <<- fitSWIM(sd*10)
     d  <<- SWIMpr(s,zt,sd)
-    a2 = fitSWIM(sd*10)
-    b2 = fitSUM(sd*10)
+    a2 <<- fitSWIM(sd*10)
+    b2 <<- fitSUM(sd*10)
   }
   if(type == 'VUM vs. SWIM'){
     phi <<- ifelse(runif(1,0,1) > .5,exp(runif(1,log(1),log(10000))),rbeta(1,3,1))
     zt <<- sample(1:n,1)
     d  <<- VUMpr(s,phi,sd)
-    a1 = fitVUM(c(phi,sd*10))
-    b1 = fitSWIM(sd*10)
+    a1 <<- fitVUM(c(phi,sd*10))
+    b1 <<- fitSWIM(sd*10)
     d  <<- SWIMpr(s,zt,sd)
-    a2 = fitSWIM(sd*10)
-    b2 = fitVUM(c(.5,sd*10))
+    a2 <<- fitSWIM(sd*10)
+    b2 <<- fitVUM(c(.5,sd*10))
   }
   
-  res[i,] = c(a1,b1,a2,b2)
+  return(c(get('a1',.GlobalEnv),get('b1',.GlobalEnv),get('a2',.GlobalEnv),get('b2',.GlobalEnv)))
   
   }
   return(res)
