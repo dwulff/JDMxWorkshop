@@ -15,7 +15,7 @@ shinyUI(fluidPage(
                 animate=animationOptions(interval=300, loop=F)),
     actionButton('Run','Run simulation',width='100%'),
     actionButton('Clear','Clear plot',width='100%'),
-    sliderInput('nsteps',"Number of VUM evaluations",min=1000,max=101000,value=1000,step = 10000,
+    sliderInput('nsteps',"Number of VUM evaluations",min=1000,max=101000,value=11000,step = 10000,
                 animate=animationOptions(interval=300, loop=F))
     ),
   mainPanel(
