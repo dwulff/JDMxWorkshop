@@ -4,7 +4,9 @@ shinyServer(function(input, output) {
       
   # Load packages    
   if(!require(snowfall,quietly = T)) install.packages('snowfall') ; require(snowfall)
-  if(!require(Rcpp,quietly = T)) install.packages('Rcpp') ; require(Rcpp)
+  if(!require(devtools,quietly = T)) install.packages('devtools') ; require(devtools)
+  if(!require(shinyCpp,quietly = T)) install_github('dwulff/JDMxWorkshop/shinyCpp')
+
   require(shinyCpp) # Note make available through gist  
   
 #  Variables for testing
