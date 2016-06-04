@@ -1,5 +1,8 @@
 shinyServer(function(input, output) {
 
+ if(!require(devtools,silent=T)) install.packages('devtools') ; require(devtools)
+ if(!require(shinyCpp,silent=T)) install_github('dwulff/JDMxWorkshop/shinyCpp')
+
  require(shinyCpp)
   
   
