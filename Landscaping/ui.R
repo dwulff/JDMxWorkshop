@@ -8,7 +8,7 @@ require(shiny)
 shinyUI(fluidPage(
   titlePanel('Landscaping'),
   sidebarLayout(sidebarPanel(
-    radioButtons('Type',  "Comparison",choices = c('SUM vs. VUM','SUM vs. SWIM','VUM vs. SWIM'),width='100%'),
+    radioButtons('Type',  "Comparison",choices = c('SUM vs. SWIM','SUM vs. VUM','VUM vs. SWIM'),width='100%'),
     radioButtons('Method',"Method",choices = c('LL','AIC','BIC'),width='100%'),
     sliderInput('Nproblem',"Number of problems",min=10,max=50,value=10,step=4,
                 animate=animationOptions(interval=1000, loop=F)),
