@@ -206,7 +206,7 @@ shinyServer(function(input, output) {
       }
     
     # print time
-    print(proc.time()[3]-t)
+    # print(proc.time()[3]-t)
     
     # collect results
     res = do.call(rbind,res)
@@ -269,7 +269,6 @@ shinyServer(function(input, output) {
       
       # left panel
       rng = range(c(left))
-      print(rng)
       xlim = ylim = rng + c(-1,1)*diff(rng)*.001
       plot.new();plot.window(xlim,ylim)
       usr = par()$usr
