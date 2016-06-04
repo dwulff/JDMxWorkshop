@@ -167,6 +167,8 @@ shinyServer(function(input, output) {
     type   = input$Type
     method = input$Method
     
+    print(type)
+    
     # use shorter names
     np   = input$Nproblem   
     no   = input$Noutcome   
