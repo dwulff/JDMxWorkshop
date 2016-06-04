@@ -79,6 +79,8 @@ complex = c(1,1,1)
 
 run = function(type,no,n,sd,np){
   
+  a1  = 0
+  
   pr  <<- problemGenerator(np,no)
   s   <<- sampl(pr,n)
   
