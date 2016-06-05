@@ -5,19 +5,18 @@ shinyServer(function(input, output) {
   # Load packages    
   if(!require(snowfall,quietly = T)) install.packages('snowfall') ; require(snowfall)
   if(!require(devtools,quietly = T)) install.packages('devtools') ; require(devtools)
-  if(!require(shinyCpp,quietly = T)) install_github('dwulff/JDMxWorkshop/shinyCpp')
+  if(!require(shinyCpp2,quietly = T)) install_github('dwulff/JDMxWorkshop/shinyCpp2')
 
-  require(shinyCpp) # Note make available through gist  
+  require(shinyCpp2) # Note make available through gist  
   
-##  Variables for testing
-#    type = 'SUM vs. VUM'
-#    method = 1
-#    np = 10
-#    no = 2
-#    n = 10
-#    dev = 10
-#    nrun = 300
-#    ncores = 1
+# #  Variables for testing
+#     type = 'SUM vs. VUM'
+#     method = 1
+#     np = 10
+#     no = 2
+#     dev = 10
+#     nrun = 100
+#     ncores = 1
 
   # +++++++++++ initialize objects
   
@@ -35,18 +34,12 @@ shinyServer(function(input, output) {
   
   i.np  = 1
   i.no  = 1
-  i.n   = 1
-  i.dev = 1
   
   nps  = round(seq(10,50,4))
   nos  = round(seq(2,22,2))
-  ns   = round(seq(2,22,2))
-  devs = round(seq(2,22,2))
   
   r.nps   = empty
   r.nos   = empty
-  r.ns    = empty
-  r.devs  = empty
   plt.res = empty
   
   # ++++++++++++ Specify handlers 
@@ -58,8 +51,6 @@ shinyServer(function(input, output) {
     r.nps[[2]][[i.np]][[1]] <<- c(r.nps[[2]][[i.np]][[1]],l.prop)
     r.nps[[2]][[i.np]][[2]] <<- c(r.nps[[2]][[i.np]][[2]],r.prop)
     r.nos  <<- empty
-    r.ns   <<- empty
-    r.devs <<- empty
     plt.res <<- r.nps
     lab <<- 'Number of problems'
     ticks <<- nps
@@ -74,42 +65,12 @@ shinyServer(function(input, output) {
     r.nos[[2]][[i.no]][[2]] <<- c(r.nos[[2]][[i.no]][[2]],r.prop)
     r.nps  <<- empty
     r.ns   <<- empty
-    r.devs <<- empty
     plt.res <<- r.nos
     lab <<- 'Number of outcomes'
     ticks <<- nos
     active <<- 'no'
     })
   
-  sel.n = reactive({
-    input$Nsamples
-    r.ns[[1]][[i.n]][[1]] <<- c(r.ns[[1]][[i.n]][[1]],l.dist)
-    r.ns[[1]][[i.n]][[2]] <<- c(r.ns[[1]][[i.n]][[2]],r.dist)
-    r.ns[[2]][[i.n]][[1]] <<- c(r.ns[[2]][[i.n]][[1]],l.prop)
-    r.ns[[2]][[i.n]][[2]] <<- c(r.ns[[2]][[i.n]][[2]],r.prop)
-    r.nps  <<- empty
-    r.nos  <<- empty
-    r.devs <<- empty
-    plt.res <<- r.ns
-    lab <<- 'Sample size'
-    ticks <<- ns
-    active <<- 'n'
-    })
-  
-  sel.dev = reactive({
-    input$Noise
-    r.devs[[1]][[i.dev]][[1]] <<- c(r.devs[[1]][[i.dev]][[1]],l.dist)
-    r.devs[[1]][[i.dev]][[2]] <<- c(r.devs[[1]][[i.dev]][[2]],r.dist)
-    r.devs[[2]][[i.dev]][[1]] <<- c(r.devs[[2]][[i.dev]][[1]],l.prop)
-    r.devs[[2]][[i.dev]][[2]] <<- c(r.devs[[2]][[i.dev]][[2]],r.prop)
-    r.nps  <<- empty
-    r.nos  <<- empty
-    r.ns   <<- empty
-    plt.res <<- r.devs
-    lab <<- 'Noise level'
-    ticks <<- devs
-    active <<- 'dev'
-    })
   
   rerun = reactive({
     input$Rerun
@@ -127,20 +88,6 @@ shinyServer(function(input, output) {
       r.nos[[2]][[i.no]][[2]] <<- c(r.nos[[2]][[i.no]][[2]],r.prop)
       plt.res <<- r.nos
       }
-    if(active == 'n'){
-      r.ns[[1]][[i.n]][[1]] <<- c(r.ns[[1]][[i.n]][[1]],l.dist)
-      r.ns[[1]][[i.n]][[2]] <<- c(r.ns[[1]][[i.n]][[2]],r.dist)
-      r.ns[[2]][[i.n]][[1]] <<- c(r.ns[[2]][[i.n]][[1]],l.prop)
-      r.ns[[2]][[i.n]][[2]] <<- c(r.ns[[2]][[i.n]][[2]],r.prop)
-      plt.res <<- r.ns
-      }
-    if(active == 'dev'){
-      r.devs[[1]][[i.dev]][[1]] <<- c(r.devs[[1]][[i.dev]][[1]],l.dist)
-      r.devs[[1]][[i.dev]][[2]] <<- c(r.devs[[1]][[i.dev]][[2]],r.dist)
-      r.devs[[2]][[i.dev]][[1]] <<- c(r.devs[[2]][[i.dev]][[1]],l.prop)
-      r.devs[[2]][[i.dev]][[2]] <<- c(r.devs[[2]][[i.dev]][[2]],r.prop)
-      plt.res <<- r.devs
-      }
     })
   
   
@@ -150,8 +97,6 @@ shinyServer(function(input, output) {
     input$Clearplt
     r.nps   <<- empty
     r.nos   <<- empty
-    r.ns    <<- empty
-    r.devs  <<- empty
     plt.res <<- empty
     })
   
@@ -172,16 +117,13 @@ shinyServer(function(input, output) {
     # use shorter names
     np   = input$Nproblem   
     no   = input$Noutcome   
-    n    = input$Nsamples
-    dev  = input$Noise 
+    dev  = as.numeric(input$Sens)
     nrun     = input$Nrun
     ncores   = input$Ncores
     
     # translate variable in indices
     i.np  <<- which(nps  == np)
     i.no  <<- which(nos  == no)
-    i.n   <<- which(ns   == n )
-    i.dev <<- which(devs == dev)
     
     # ++++++++++ Fitting
     
@@ -193,17 +135,17 @@ shinyServer(function(input, output) {
       
       # Multi core execution
       sfInit(parallel = T, cpus = ncores)
-      sfLibrary(shinyCpp)
-      sfExport('type','no','n','dev','np')
+      sfLibrary(shinyCpp2)
+      sfExport('type','no','dev','np')
       res = sfClusterApplyLB(rep(round(nrun/(ncores)),ncores),
-                             function(x) runm(nm = x,type = type, no = no, n = n, sd = dev, np = np))
+                             function(x) runm(nm = x,type = type, no = no, sens = dev, np = np))
       sfStop()
     } else {
       
       # Single core execution
       res = list()
       for(i in 1:nrun){
-        res[[i]] = run(type = type, no = no, n = n, sd = dev, np = np)
+        res[[i]] = run(type = type, no = no, sens = dev, np = np)
         }
       }
     
@@ -212,25 +154,27 @@ shinyServer(function(input, output) {
     
     # collect results
     res = do.call(rbind,res)
-    LLs = res[,c(1,3,5,7)]      
+    LLs = res     
 
-    # +++++++++ Plot preparations
+    #print(LLs)
     
+    # +++++++++ Plot preparations
+
     nam = '-LL'
-    if(type == 'SUM vs. VUM') { # SUM-VUM ; VUM-SUM
-      csel = c(1,2);ms.l=c('SUM','VUM')
+    if(type == 'TK vs. GE') { # SUM-VUM ; VUM-SUM
+      csel = c(1,2);ms.l=c('TK','GE')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
       if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[1]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[2] }
     }
-    if(type == 'SUM vs. SWIM') {
-      csel = c(1,3);ms.l=c('SUM','SWIM')
+    if(type == 'TK vs. P') {
+      csel = c(1,3);ms.l=c('TK','P')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
       if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[1]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[3] }
     }
-    if(type == 'VUM vs. SWIM') {
-      csel = c(2,3);ms.l=c('VUM','SWIM')
+    if(type == 'GE vs. P') {
+      csel = c(2,3);ms.l=c('GE','P')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 4;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
       if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2*log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[2]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[3] }
@@ -334,8 +278,6 @@ shinyServer(function(input, output) {
       # +++++++++++ Update results
       
       sel.no()
-      sel.n()
-      sel.dev()
       sel.np()
       rerun()
       clear()

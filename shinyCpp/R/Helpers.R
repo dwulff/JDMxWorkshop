@@ -152,7 +152,7 @@ runm = function(nm,type,no,n,sd,np){
     b2 <<- fitVUM(c(.5,sd*10))
   }
   
-  return(c(get('a1',.GlobalEnv),get('b1',.GlobalEnv),get('a2',.GlobalEnv),get('b2',.GlobalEnv)))
+  res[i,] = c(get('a1',.GlobalEnv),get('b1',.GlobalEnv),get('a2',.GlobalEnv),get('b2',.GlobalEnv))
   
   }
   return(res)

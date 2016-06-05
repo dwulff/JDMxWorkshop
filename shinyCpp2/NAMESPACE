@@ -1,0 +1,3 @@
+useDynLib(shinyCpp2)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
