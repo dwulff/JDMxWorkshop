@@ -204,15 +204,15 @@ double utility_tk(std::vector<double> par, NumericVector opt){
   std::vector<double> vs, cmp, ps;
   if(nneg > 0){
     for(i = 0; i < nneg; i++){
-      v = v_f(double(opt[i]),1,par[0]);
+      v = v_f(double(opt[i]),1,1);
       vs.push_back(v);
       ps.push_back(opt[i + no]);
     }
     cmp = cump(ps);
-    w   = w_tk(cmp[0], par[1]);
+    w   = w_tk(cmp[0], par[0]);
     ut += w * vs[0];
     for(i = 1; i < nneg; i++){
-      nw = w_tk(cmp[i], par[1]);
+      nw = w_tk(cmp[i], par[0]);
       ut += vs[i] * (nw - w);
       w = nw;
     }
@@ -221,15 +221,15 @@ double utility_tk(std::vector<double> par, NumericVector opt){
   }
   if(npos > 0){
     for(i = 0; i < npos; i++){
-      v = v_f(double(opt[i + nneg]),1,par[0]);
+      v = v_f(double(opt[i + nneg]),1,1);
       vs.push_back(v);
       ps.push_back(opt[i + nneg + no]);
     }
     cmp = cump(ps);
-    w   = w_tk(cmp[0], par[1]);
+    w   = w_tk(cmp[0], par[0]);
     ut += w * vs[0];
     for(i = 1; i < npos; i++){
-      nw = w_tk(cmp[i], par[1]);
+      nw = w_tk(cmp[i], par[0]);
       ut += vs[i] * (nw - w);
       w = nw;
     }
@@ -248,15 +248,15 @@ double utility_ge(std::vector<double> par, NumericVector opt){
   std::vector<double> vs, cmp, ps;
   if(nneg > 0){
     for(i = 0; i < nneg; i++){
-      v = v_f(double(opt[i]),1,par[0]);
+      v = v_f(double(opt[i]),1,1);
       vs.push_back(v);
       ps.push_back(opt[i + no]);
     }
     cmp = cump(ps);
-    w   = w_ge(cmp[0], par[2], par[1]);
+    w   = w_ge(cmp[0], par[1], par[0]);
     ut += w * vs[0];
     for(i = 1; i < nneg; i++){
-      nw = w_ge(cmp[i], par[2], par[1]);
+      nw = w_ge(cmp[i], par[1], par[0]);
       ut += vs[i] * (nw - w);
       w = nw;
     }
@@ -265,15 +265,15 @@ double utility_ge(std::vector<double> par, NumericVector opt){
   }
   if(npos > 0){
     for(i = 0; i < npos; i++){
-      v = v_f(double(opt[i + nneg]),1,par[0]);
+      v = v_f(double(opt[i + nneg]),1,1);
       vs.push_back(v);
       ps.push_back(opt[i + nneg + no]);
     }
     cmp = cump(ps);
-    w   = w_ge(cmp[0], par[2], par[1]);
+    w   = w_ge(cmp[0], par[1], par[0]);
     ut += w * vs[0];
     for(i = 1; i < npos; i++){
-      nw = w_ge(cmp[i], par[2], par[1]);
+      nw = w_ge(cmp[i], par[1], par[0]);
       ut += vs[i] * (nw - w);
       w = nw;
     }
@@ -291,15 +291,15 @@ double utility_p(std::vector<double> par, NumericVector opt){
   std::vector<double> vs, cmp, ps;
   if(nneg > 0){
     for(i = 0; i < nneg; i++){
-      v = v_f(double(opt[i]),1,par[0]);
+      v = v_f(double(opt[i]),1,1);
       vs.push_back(v);
       ps.push_back(opt[i + no]);
     }
     cmp = cump(ps);
-    w   = w_p(cmp[0], par[2], par[1]);
+    w   = w_p(cmp[0], par[1], par[0]);
     ut += w * vs[0];
     for(i = 1; i < nneg; i++){
-      nw = w_p(cmp[i], par[2], par[1]);
+      nw = w_p(cmp[i], par[1], par[0]);
       ut += vs[i] * (nw - w);
       w = nw;
     }
@@ -308,15 +308,15 @@ double utility_p(std::vector<double> par, NumericVector opt){
   }
   if(npos > 0){
     for(i = 0; i < npos; i++){
-      v = v_f(double(opt[i + nneg]),1,par[0]);
+      v = v_f(double(opt[i + nneg]),1,1);
       vs.push_back(v);
       ps.push_back(opt[i + nneg + no]);
     }
     cmp = cump(ps);
-    w   = w_p(cmp[0], par[2], par[1]);
+    w   = w_p(cmp[0], par[1], par[0]);
     ut += w * vs[0];
     for(i = 1; i < npos; i++){
-      nw = w_p(cmp[i], par[2], par[1]);
+      nw = w_p(cmp[i], par[1], par[0]);
       ut += vs[i] * (nw - w);
       w = nw;
     }

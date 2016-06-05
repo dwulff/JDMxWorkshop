@@ -138,14 +138,14 @@ shinyServer(function(input, output) {
       sfLibrary(shinyCpp2)
       sfExport('type','no','dev','np')
       res = sfClusterApplyLB(rep(round(nrun/(ncores)),ncores),
-                             function(x) runm(nm = x,type = type, no = no, sens = dev, np = np))
+                             function(x) shinyCpp2::runm(nm = x,type = type, no = no, sens = dev, np = np))
       sfStop()
     } else {
       
       # Single core execution
       res = list()
       for(i in 1:nrun){
-        res[[i]] = run(type = type, no = no, sens = dev, np = np)
+        res[[i]] = shinyCpp2::run(type = type, no = no, sens = dev, np = np)
         }
       }
     
@@ -161,22 +161,22 @@ shinyServer(function(input, output) {
     # +++++++++ Plot preparations
 
     nam = '-LL'
-    if(type == 'TK vs. GE') { # SUM-VUM ; VUM-SUM
+    if(type == 'Tversky-Kahneman. vs. Goldstein-Einhorn') { # SUM-VUM ; VUM-SUM
       csel = c(1,2);ms.l=c('TK','GE')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
-      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
+      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(np);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[1]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[2] }
     }
-    if(type == 'TK vs. P') {
+    if(type == 'Tversky-Kahneman vs. Prelec') {
       csel = c(1,3);ms.l=c('TK','P')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
-      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
+      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(np);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[1]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[3] }
     }
-    if(type == 'GE vs. P') {
+    if(type == 'Goldstein-Einhorn vs. Prelec') {
       csel = c(2,3);ms.l=c('GE','P')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 4;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
-      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2*log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
+      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2*log(np);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[2]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[3] }
     }
     
@@ -236,9 +236,9 @@ shinyServer(function(input, output) {
       points(l.cent[1],l.cent[2],pch=16,col='red',cex=1.9)
       lines(rbind(l.cent,intsct),col='red',lwd=2)
       
-      outline(l.cent[1] + diff(rng)*ifelse(l.dist<0,-.03,.03),
-              l.cent[2], #+ diff(rng)*ifelse(l.dist<0,.05,-.05),
-              adj = ifelse(l.dist<0,1,0),
+      outline(l.cent[1], #+ diff(rng)*ifelse(l.dist<0,-.03,.03),
+              l.cent[2] + diff(rng)*ifelse(l.dist<0,.05,-.05),
+              adj = .5,
               labels = abs(round(l.dist,2)),col = 'red',bg = rgb(1,1,1,alpha=1),
               h = diff(rng)*.4, w = diff(rng)*.4,cex=1.4, font=1
               )
@@ -268,9 +268,9 @@ shinyServer(function(input, output) {
       lines(rbind(r.cent,intsct),col='red',lwd=2)
       
 
-      outline(r.cent[1] + diff(rng)*ifelse(r.dist<0,-.03,.03),
-              r.cent[2], #+ diff(rng)*ifelse(r.dist<0,.05,-.05),
-              adj = ifelse(r.dist<0,1,0),
+      outline(r.cent[1], #+ diff(rng)*ifelse(r.dist<0,-.03,.03),
+              r.cent[2] + diff(rng)*ifelse(r.dist<0,.05,-.05),
+              adj = .5,
               labels = abs(round(r.dist,2)),col = 'red',bg = rgb(1,1,1,alpha=.8),
               h = diff(rng)*.4, w = diff(rng)*.4,cex=1.4, font=1
       )

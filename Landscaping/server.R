@@ -196,14 +196,14 @@ shinyServer(function(input, output) {
       sfLibrary(shinyCpp)
       sfExport('type','no','n','dev','np')
       res = sfClusterApplyLB(rep(round(nrun/(ncores)),ncores),
-                             function(x) runm(nm = x,type = type, no = no, n = n, sd = dev, np = np))
+                             function(x) shinyCpp::runm(nm = x,type = type, no = no, n = n, sd = dev, np = np))
       sfStop()
     } else {
       
       # Single core execution
       res = list()
       for(i in 1:nrun){
-        res[[i]] = run(type = type, no = no, n = n, sd = dev, np = np)
+        res[[i]] = shinyCpp::run(type = type, no = no, n = n, sd = dev, np = np)
         }
       }
     
@@ -220,19 +220,19 @@ shinyServer(function(input, output) {
     if(type == 'SUM vs. VUM') { # SUM-VUM ; VUM-SUM
       csel = c(1,2);ms.l=c('SUM','VUM')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
-      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
+      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(np);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[1]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[2] }
     }
     if(type == 'SUM vs. SWIM') {
       csel = c(1,3);ms.l=c('SUM','SWIM')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
-      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
+      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + log(np);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[1]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[3] }
     }
     if(type == 'VUM vs. SWIM') {
       csel = c(2,3);ms.l=c('VUM','SWIM')
       if(method == 'AIC') {nam='AIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 4;        LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 4 }
-      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2*log(n);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
+      if(method == 'BIC') {nam='BIC';LLs[,c(1,4)] = 2*LLs[,c(1,4)] + 2*log(np);   LLs[,c(2,3)] = 2*LLs[,c(2,3)] + 2*log(np) }   
       if(method == 'NML') {nam='NML';LLs[,c(1,4)] = LLs[,c(1,4)] / complex[2]; LLs[,c(2,3)] =   LLs[,c(2,3)] / complex[3] }
     }
     

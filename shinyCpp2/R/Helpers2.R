@@ -45,66 +45,62 @@ gen.p = function(np,n) {a = problemGenerator(np,n,n); transformProblems(a)}
 
 fTK = function(par) cpt_lik_tk(par,get('pr',.GlobalEnv),get('ch','.GlobalEnv'))
 fitTK = function(start){
-  a = nlminb(start,fTK,lower=c(.01,.01,.01),upper=c(100,100,100),control=list(eval.max=1000,iter.max=1000))
+  a = nlminb(start,fTK,lower=c(.01,.01),upper=c(100,100),control=list(eval.max=1000,iter.max=1000))
   return(a$objective)
 }
 
 fGE = function(par) cpt_lik_ge(par,get('pr',.GlobalEnv),get('ch','.GlobalEnv'))
 fitGE = function(start){
-  a = nlminb(start,fGE,lower=c(.01,.01,.01,.01),upper=c(100,100,100,100),control=list(eval.max=1000,iter.max=1000))
+  a = nlminb(start,fGE,lower=c(.01,.01,.01),upper=c(100,100,100),control=list(eval.max=1000,iter.max=1000))
   return(a$objective)
 }
 
 fP = function(par) cpt_lik_p(par,get('pr',.GlobalEnv),get('ch','.GlobalEnv'))
 fitP = function(start){
-  a = nlminb(start,fP,lower=c(.01,.01,.01,.01),upper=c(100,100,100,100),control=list(eval.max=1000,iter.max=1000))
+  a = nlminb(start,fP,lower=c(.01,.01,.01),upper=c(100,100,100),control=list(eval.max=1000,iter.max=1000))
   return(a$objective)
 }
-
 
 
 run = function(type,no,sens,np){
   
   pr  <<- gen.p(np,no)
   
-  if(type == 'TK vs. GE'){
-    alpha = runif(1,.01,2)
+  if(type == 'Tversky-Kahneman. vs. Goldstein-Einhorn'){
     gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-    ch <<-  cpt_randchoice_tk(c(alpha,gamma,sens),get('pr'))
-    a1 <<- fitTK(c(alpha,gamma,sens/100))
-    b1 <<- fitGE(c(alpha,1,gamma,sens/100))
+    ch <<-  cpt_randchoice_tk(c(gamma,sens),get('pr'))
+    a1 <<- fitTK(c(gamma,sens/100))
+    b1 <<- fitGE(c(1,gamma,sens/100))
     gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
     delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-    ch <<-  cpt_randchoice_ge(c(alpha,delta,gamma),get('pr'))
-    a2 <<- fitGE(c(alpha,delta,gamma,sens/100))
-    b2 <<- fitTK(c(alpha,gamma,sens/100))
+    ch <<-  cpt_randchoice_ge(c(delta,gamma,sens),get('pr'))
+    a2 <<- fitGE(c(delta,gamma,sens/100))
+    b2 <<- fitTK(c(gamma,sens/100))
   }
   
-  if(type == 'TK vs. P'){
-    alpha = runif(1,.01,2)
+  if(type == 'Tversky-Kahneman vs. Prelec'){
     gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-    ch <<-  cpt_randchoice_tk(c(alpha,gamma,sens),get('pr'))
-    a1 <<- fitTK(c(alpha,gamma,sens/100))
-    b1 <<- fitP(c(alpha,1,gamma,sens/100))
+    ch <<-  cpt_randchoice_tk(c(gamma,sens),get('pr'))
+    a1 <<- fitTK(c(gamma,sens/100))
+    b1 <<- fitP(c(1,gamma,sens/100))
     gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
     delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-    ch <<-  cpt_randchoice_p(c(alpha,delta,gamma),get('pr'))
-    a2 <<- fitP(c(alpha,delta,gamma,sens/100))
-    b2 <<- fitTK(c(alpha,gamma,sens/100))
+    ch <<-  cpt_randchoice_p(c(delta,gamma,sens),get('pr'))
+    a2 <<- fitP(c(delta,gamma,sens/100))
+    b2 <<- fitTK(c(gamma,sens/100))
   }
   
-  if(type == 'GE vs. P'){
-    alpha = runif(1,.01,2)
+  if(type == 'Goldstein-Einhorn vs. Prelec'){
     gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
     delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-    ch <<-  cpt_randchoice_ge(c(alpha,delta,gamma,sens),get('pr'))
-    a1 <<- fitGE(c(alpha,delta,gamma,sens/100))
-    b1 <<- fitP(c(alpha,delta,gamma,sens/100))
+    ch <<-  cpt_randchoice_ge(c(delta,gamma,sens),get('pr'))
+    a1 <<- fitGE(c(delta,gamma,sens/100))
+    b1 <<- fitP(c(delta,gamma,sens/100))
     gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
     delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-    ch <<-  cpt_randchoice_p(c(alpha,delta,gamma),get('pr'))
-    a2 <<- fitP(c(alpha,delta,gamma,sens/100))
-    b2 <<- fitGE(c(alpha,delta,gamma,sens/100))
+    ch <<-  cpt_randchoice_p(c(delta,gamma,sens),get('pr'))
+    a2 <<- fitP(c(delta,gamma,sens/100))
+    b2 <<- fitGE(c(delta,gamma,sens/100))
   }
   return(c(get('a1',.GlobalEnv),get('b1',.GlobalEnv),get('a2',.GlobalEnv),get('b2',.GlobalEnv)))
 }
@@ -118,43 +114,41 @@ runm = function(nm,type,no,sens,np){
     
     pr  <<- gen.p(np,no)
     
-    if(type == 'TK vs. GE'){
-      alpha = runif(1,.01,2)
+    if(type == 'Tversky-Kahneman. vs. Goldstein-Einhorn'){
       gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-      ch <<-  cpt_randchoice_tk(c(alpha,gamma,sens),get('pr'))
-      a1 <<- fitTK(c(alpha,gamma,sens/100))
-      b1 <<- fitGE(c(alpha,1,gamma,sens/100))
-      gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-      delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-      ch <<-  cpt_randchoice_ge(c(alpha,delta,gamma),get('pr'))
-      a2 <<- fitGE(c(alpha,delta,gamma,sens/100))
-      b2 <<- fitTK(c(alpha,gamma,sens/100))
-    }
-    if(type == 'TK vs. P'){
-      alpha = runif(1,.01,2)
-      gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-      ch <<-  cpt_randchoice_tk(c(alpha,gamma,sens),get('pr'))
-      a1 <<- fitTK(c(alpha,gamma,sens/100))
-      b1 <<- fitP(c(alpha,1,gamma,sens/100))
+      ch <<-  cpt_randchoice_tk(c(gamma,sens),get('pr'))
+      a1 <<- fitTK(c(gamma,sens/100))
+      b1 <<- fitGE(c(1,gamma,sens/100))
       gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
       delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-      ch <<-  cpt_randchoice_p(c(alpha,delta,gamma),get('pr'))
-      a2 <<- fitP(c(alpha,delta,gamma,sens/100))
-      b2 <<- fitTK(c(alpha,gamma,sens/100))
+      ch <<-  cpt_randchoice_ge(c(delta,gamma,sens),get('pr'))
+      a2 <<- fitGE(c(delta,gamma,sens/100))
+      b2 <<- fitTK(c(gamma,sens/100))
     }
     
-    if(type == 'GE vs. P'){
-      alpha = runif(1,.01,2)
+    if(type == 'Tversky-Kahneman vs. Prelec'){
+      gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
+      ch <<-  cpt_randchoice_tk(c(gamma,sens),get('pr'))
+      a1 <<- fitTK(c(gamma,sens/100))
+      b1 <<- fitP(c(1,gamma,sens/100))
       gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
       delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-      ch <<-  cpt_randchoice_ge(c(alpha,delta,gamma,sens),get('pr'))
-      a1 <<- fitGE(c(alpha,delta,gamma,sens/100))
-      b1 <<- fitP(c(alpha,delta,gamma,sens/100))
+      ch <<-  cpt_randchoice_p(c(delta,gamma,sens),get('pr'))
+      a2 <<- fitP(c(delta,gamma,sens/100))
+      b2 <<- fitTK(c(gamma,sens/100))
+    }
+    
+    if(type == 'Goldstein-Einhorn vs. Prelec'){
       gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
       delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
-      ch <<-  cpt_randchoice_p(c(alpha,delta,gamma),get('pr'))
-      a2 <<- fitP(c(alpha,delta,gamma,sens/100))
-      b2 <<- fitGE(c(alpha,delta,gamma,sens/100))
+      ch <<-  cpt_randchoice_ge(c(delta,gamma,sens),get('pr'))
+      a1 <<- fitGE(c(delta,gamma,sens/100))
+      b1 <<- fitP(c(delta,gamma,sens/100))
+      gamma = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
+      delta = ifelse(runif(1,0,1)<.5,runif(1,.01,1),runif(1,1,100))
+      ch <<-  cpt_randchoice_p(c(delta,gamma,sens),get('pr'))
+      a2 <<- fitP(c(delta,gamma,sens/100))
+      b2 <<- fitGE(c(delta,gamma,sens/100))
     }
     
     res[i,] = c(get('a1',.GlobalEnv),get('b1',.GlobalEnv),get('a2',.GlobalEnv),get('b2',.GlobalEnv))
@@ -164,5 +158,12 @@ runm = function(nm,type,no,sens,np){
 }
 
 
+# t = proc.time()[3]
+# 
+# for(i in 1:1000) cpt_lik_ge(c(1,1,1),get('pr',.GlobalEnv),get('ch','.GlobalEnv'))
+# for(i in 1:1000) cpt_lik_p(c(1,1,1),get('pr',.GlobalEnv),get('ch','.GlobalEnv'))
+# for(i in 1:1000) cpt_lik_tk(c(1,1,1),get('pr',.GlobalEnv),get('ch','.GlobalEnv'))
+# 
+# proc.time()[3] - t
 
 

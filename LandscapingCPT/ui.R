@@ -8,7 +8,7 @@ require(shiny)
 shinyUI(fluidPage(
   titlePanel('Landscaping CPT'),
   sidebarLayout(sidebarPanel(
-    radioButtons('Type',  "Comparison",choices = c('TK vs. GE','TK vs. P','GE vs. P'),width='100%'),
+    radioButtons('Type',  "Comparison",choices = c('Tversky-Kahneman. vs. Goldstein-Einhorn','Tversky-Kahneman vs. Prelec','Goldstein-Einhorn vs. Prelec'),width='100%'),
     radioButtons('Method',"Method",choices = c('LL','AIC','BIC'),width='100%'),
     radioButtons('Sens',"Sensitivity",choices = c('.001','.1','10','Inf'),width='100%'),
     sliderInput('Nproblem',"Number of problems",min=10,max=50,value=10,step=4,
